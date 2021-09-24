@@ -65,7 +65,7 @@ in_progress_states = [
 
 
 class IncompletePush(Exception):
-    """ Error raised when a pub push is not complete. """
+    """Error raised when a pub push is not complete."""
 
     pass
 
@@ -108,7 +108,9 @@ def calculate_duration(push):
         # prometheus' histogram and counter model.  So - we just ignore pushes until they are
         # complete and have a final duration.
         raise IncompletePush("Push is not yet complete.  Duration is undefined.")
-    return (arrow.get(push['dt_finished']) - arrow.get(push['dt_created'])).total_seconds()
+    return (
+        arrow.get(push['dt_finished']) - arrow.get(push['dt_created'])
+    ).total_seconds()
 
 
 def find_applicable_buckets(duration):
@@ -207,7 +209,9 @@ def scrape():
         labels=PUSH_LABELS,
     )
     for buckets, duration_sum, labels in pub_push_duration_seconds(pushes):
-        pub_push_duration_seconds_family.add_metric(labels, buckets, sum_value=duration_sum)
+        pub_push_duration_seconds_family.add_metric(
+            labels, buckets, sum_value=duration_sum
+        )
 
     # Replace this in one atomic operation to avoid race condition to the Expositor
     metrics.update(
@@ -222,7 +226,7 @@ def scrape():
 
 
 class Expositor(object):
-    """ Responsible for exposing metrics to prometheus """
+    """Responsible for exposing metrics to prometheus"""
 
     def collect(self):
         logging.info("Serving prometheus data")
