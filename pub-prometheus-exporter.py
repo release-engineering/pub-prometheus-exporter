@@ -8,6 +8,7 @@ import datetime
 import json
 import logging
 import os
+import socket
 import time
 import xmlrpc.client
 
@@ -24,8 +25,12 @@ from prometheus_client import start_http_server
 START = None
 
 PUB_URL = os.environ['PUB_URL']  # Required
+PUB_TIMEOUT = os.environ.get('PUB_TIMEOUT', 60)  # Optional
+
 
 p = xmlrpc.client.ServerProxy(PUB_URL + '/pub/xmlrpc/client')
+# https://bugs.python.org/issue14134
+socket.setdefaulttimeout(PUB_TIMEOUT)
 
 PUSH_LABELS = ['target', 'source']
 
