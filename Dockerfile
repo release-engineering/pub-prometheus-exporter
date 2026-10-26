@@ -12,7 +12,8 @@ COPY requirements.txt /usr/local/requirements.txt
 RUN pip3 install --no-dependencies -r /usr/local/requirements.txt
 
 # Allow a non-root user to install a custom root CA at run-time
-RUN chmod g+w /etc/pki/tls/certs/ca-bundle.crt
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
+RUN chmod g+w /etc/ssl/certs/ca-bundle.crt
 
 COPY pub-prometheus-exporter.py /usr/local/bin/.
 COPY docker/ /docker/
